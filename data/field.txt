@@ -1,0 +1,10 @@
+Field.1. FPT - FPT UNI - 10 - 10$/h - Booked
+2 slot:
+1. 10h0p -11h30p - Booked
+2. 12h0p -13h30p - IsAvailable
+
+Field.2. TDT - TON DUC THANG UNI - 11 - 10$/h - IsAvailable
+2 slot:
+1. 10h0p -11h0p - IsAvailable
+2. 12h0p -13h0p - Booked
+
