@@ -1,2 +1,1 @@
-1. Field: 1 |Name: Nhat |Phone Number: 1013030102 |Date: 22-12-2000 |Slot: 1 | Success
-2. Field: 2 |Name: gold |Phone Number: 1201010310 |Date: 20-10-2025 |Slot: 2 | Success
+1. Field: 1 |Name: Nhat |Phone Number: 02310240124 |Date: 22-12-2006 |Slot: 1 | Success
