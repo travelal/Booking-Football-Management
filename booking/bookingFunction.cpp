@@ -96,18 +96,18 @@ void cancelBooking(){
     }
 };
 
-void displayBooking(){
-    if (bookings.empty()){
-        cout << " NO field in display ";
-        return;
-    }
-    for (auto &b: bookings){
-        cout << b.bookingId << " - Field " << b.fieldId << " - " 
-             << b.customName << " - " << b.phoneNumber << " - " 
-             << b.date << " - slot " << b.idTimeSlot << " - " << 
-             (b.status ? "booked success" : "Booked fail") << endl;
-    }
-};
+// void displayBooking(){
+//     if (bookings.empty()){
+//         cout << " NO field in display ";
+//         return;
+//     }
+//     for (auto &b: bookings){
+//         cout << b.bookingId << " - Field " << b.fieldId << " - " 
+//              << b.customName << " - " << b.phoneNumber << " - " 
+//              << b.date << " - slot " << b.idTimeSlot << " - " << 
+//              (b.status ? "booked success" : "Booked fail") << endl;
+//     }
+// };
 
 void saveBookingToFile(){
     ofstream file("data/booking.txt");

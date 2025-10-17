@@ -4,7 +4,7 @@
 void bookingMenu();
 void addBooking();
 void cancelBooking();
-void displayBooking();
+// void displayBooking();
 void saveBookingToFile();
 void loadBookingToFile();
 
