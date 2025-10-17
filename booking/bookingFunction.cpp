@@ -29,7 +29,7 @@ void bookingMenu(){
                 cancelBooking();
                 break;
             case 3:
-                displayBooking();
+                loadBookingToFile();
                 break;
             case 4:
                 saveBookingToFile();
@@ -53,7 +53,7 @@ void addBooking(){
     cout << "Enter your Field ID want to book: "; cin >> b.fieldId;
     cout << "Enter Customer Name: \n"; cin >> b.customName;
     cout << "Enter Phone Number: \n"; cin >> b.phoneNumber;
-    cout << "Enter Date (dd-mm-yyyy): \n"; cin >> b.date;
+    cout << "Enter Date Booking(dd-mm-yyyy): \n"; cin >> b.date;
     cout << "Enter Your ID TimeSlot: \n"; cin >> b.idTimeSlot;
 
     for (auto &field : fields){
