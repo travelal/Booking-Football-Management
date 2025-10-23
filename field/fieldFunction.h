@@ -2,6 +2,7 @@
 #define FIELD_FUNCTION_H
 #include <string>
 #include <vector>
+#include <fstream>
 #include "fieldEntity.h"
 using namespace std;
 
@@ -11,9 +12,7 @@ void fieldMenu();
 void addField();
 void editField();
 void editBasicField(string id);
-void editFieldStatus(string id);
 void editTimeSlots();
-void editTimeSlotStatus();
 void deleteField();
 void deleteFieldBasic();
 void deleteTimeSlots();
@@ -22,4 +21,9 @@ void displayAvailableField();
 void findField();
 void saveFileOfField();
 void loadFileOfField();
+Field loadFieldFromFileById(string fieldId);
+Field parseFieldLine(ifstream &file, const string &line);
+vector<Field> loadFieldFromFileInVectorType();
+void saveFieldToFile(const vector<Field>& fields);
+
 #endif
