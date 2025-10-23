@@ -2,8 +2,11 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <ctime>
+#include <iomanip>
 #include "fieldEntity.h"
 #include "fieldFunction.h"
+#include "../booking-field/bookingField.h"
 using namespace std;
 
 vector<Field> fields; //mảng động field , hay còn gọi là danh sách, kieu du lieu chung
@@ -70,10 +73,9 @@ void addField() {
         cin >> startTime >> startMin;
         cout << "Slot " << i + 1 << ": Enter end time (Hour Min)): ";
         cin >> endTime >> endMin;
-        f.timeSlots.push_back(TimeSlot(i + 1, startTime, endTime, startMin, endMin, true));
+        f.timeSlots.push_back(TimeSlot(i + 1, startTime, endTime, startMin, endMin));
     }
 
-    f.isAvailable = true;
     fields.push_back(f);
     cout << "Field added sucessfully! ";
     saveFileOfField();
@@ -90,9 +92,7 @@ void editField() {
                 do {
                     cout << "--- Edit Field ---\n";
                     cout << "1. Edit basic info field (name, location, size, rate)\n";
-                    cout << "2. Edit field status\n";
-                    cout << "3. Edit time slots\n";
-                    cout << "4. Edit time slots status\n";
+                    cout << "2. Edit time slots\n";
                     cout << "0. Back\n";
                     cout << "Choice One: ";
                     cin >> choice;
@@ -101,18 +101,13 @@ void editField() {
                             editBasicField(id);
                             break;
                         case 2:
-                            editFieldStatus(id);
-                            break;
-                        case 3:
                             editTimeSlots();
-                            break;
-                        case 4:
-                            editTimeSlotStatus();
                             break;
                     }
                 } while (choice !=0);
         }
-    }saveFileOfField();
+    }
+    saveFileOfField();
 };
 
 void editBasicField(string id){
@@ -124,48 +119,9 @@ void editBasicField(string id){
             cout << "Enter new hourly rate: "; cin >> f.hourlyRate;
             return;
         }
-    }saveFileOfField();
+    }
     cout << "Field with ID" << id << "not found" << endl;        
-};
-
-void editFieldStatus(string id){
-    for (auto &f : fields){
-        if ( f.id == id ){
-            int status;
-            cout << "Current status" << (f.isAvailable ? "Available" : "Booked") << endl;
-            cout << "Set field status ( 1. Available, 2. Booked )";
-            cin >> status;
-            if (status == 1) {
-                f.isAvailable = true;
-                cout << "--- Status updated to Available! --- \n";
-            } else if (status == 2) {
-                f.isAvailable = false;
-                cout << "--- Status updated to Booked! --- \n";
-            } else {
-                cout << "--- Invalid choice! Please enter 1 or 2. --- \n";
-            }
-            return;
-        }
-    }saveFileOfField();
-};
-
-void updateFieldStatus(Field & field) {
-    if (field.timeSlots.empty()){
-        field.isAvailable = true;
-        return;
-    }
-    
-    bool allBooked = true;
-    for (auto &timeSlot : field.timeSlots){
-        if (timeSlot.isAvailable) {
-            allBooked = false;
-            break;
-        }
-    }
-    field.isAvailable = !allBooked;
-    if (allBooked){
-        cout << "--- Field " << field.id << " status updated to Booked (all time slots booked)! ---" << endl;
-    }saveFileOfField();
+    saveFileOfField();
 };
 
 void editTimeSlots(){
@@ -182,51 +138,13 @@ void editTimeSlots(){
                 if (timeSlot.id == slotID){
                     cout << "Editing Time Slot: " << slotID << endl;
                     cout << "Current: " << timeSlot.startTime << "h"<< timeSlot.startMin << "p" << " - "
-                         << timeSlot.endTime << "h" << timeSlot.endMin <<"p" <<" - "
-                         <<(timeSlot.isAvailable ? "Available" : "Booked") <<endl;
+                         << timeSlot.endTime << "h" << timeSlot.endMin <<"p" << endl;
                     
                     cout << "Enter new start time (hour min): ";
                     cin >> timeSlot.startTime >> timeSlot.startMin;
                     cout << "Enter new end time (hour min): ";
                     cin >> timeSlot.endTime >> timeSlot.endMin;
                     cout << " ===Change Time Slot Success !!!=== ";
-                }
-            }
-        }
-    }saveFileOfField();
-};
-
-void editTimeSlotStatus(){
-    string fieldId;
-    cout << "Enter field ID to edit: ";
-    cin >> fieldId;
-    for (auto &f : fields){
-        if (f.id == fieldId){
-            int slotId;
-            cout << "Enter ID time slot field: ";
-            cin >> slotId;
-
-            for (auto &timeSlot : f.timeSlots){
-                if (timeSlot.id == slotId){
-                    cout << "Editing time status" << slotId <<endl;
-                    cout << "Current: " << timeSlot.startTime << "h " << timeSlot.startMin << "p - "
-                    << timeSlot.endTime << "h" << timeSlot.endMin << "p - "
-                    << (timeSlot.isAvailable ? "Available" : "Booked") << endl;
-
-                    cout << "Set time slot status (1. IsAvailable, 2. Booked): ";
-                    int statusTimeSlot;
-                    cin >> statusTimeSlot;
-                    if (statusTimeSlot == 1) {
-                        timeSlot.isAvailable = true;
-                        cout << "--- Time Slot Status update IsAvailable---\n";
-                    }else if (statusTimeSlot == 2){
-                        timeSlot.isAvailable = false;
-                        cout << "--- Time Slot Status update Booked ---\n";
-                    }else {
-                        cout << "--- Invalid choice! Please choice 1 or 2 ---\n";
-                    }
-                    updateFieldStatus(f);
-                    return;
                 }
             }
         }
@@ -241,8 +159,7 @@ void displayField(){
     
     for( auto &f : fields){
         cout <<f.id<< " - " << f.name << "-" << f.location
-             << " -  " << f.size << " - " <<f.hourlyRate <<"$/h"
-             << " - " << (f.isAvailable ? "Available" : "Booked") << endl;
+             << " -  " << f.size << " - " <<f.hourlyRate <<"$/h" << endl;
 
         
         cout << " Time Slots: " << endl;
@@ -253,8 +170,7 @@ void displayField(){
             for (i=0; i < f.timeSlots.size(); i++){
                 cout << f.timeSlots[i].id << "." << f.timeSlots[i].startTime <<"h"
                     <<f.timeSlots[i].startMin <<"p"<< " - " << f.timeSlots[i].endTime 
-                    << "h" <<f.timeSlots[i].endMin<< "p" <<"-" 
-                    << (f.timeSlots[i].isAvailable ? "Available" : "Booked") << endl;
+                    << "h" <<f.timeSlots[i].endMin<< "p" << endl;
             }
         }
     }
@@ -339,12 +255,46 @@ void findField(){
             cout << "=== Find Field ===\n";
             cout << f.id << " - " << f.name << " - " 
             << f.location << " - " << f.size << "m - " 
-            << f.hourlyRate << "$/h" << " - "
-            << (f.isAvailable ? "Available" : "Booked") << endl;
+            << f.hourlyRate << "$/h" << endl;
         }
     }
 };
 
+
+void saveFieldToFile(const vector<Field>& fields) {
+    ofstream file("data/field.txt");
+    if (!file) {
+        cout << "Failed to open field.txt for writing.\n";
+        return;
+    }
+    
+    for (auto &f : fields) {
+        file << "Field." << f.id << ". "
+             << f.name << " - " << f.location << " - "
+             << f.size << " - " << f.hourlyRate << "$/h - "
+             << "\n";
+        
+        file << f.timeSlots.size() << " slot:\n";
+        
+        for (const TimeSlot &timeSlot : f.timeSlots) {
+            auto formatMinute = [](int m) {
+                string s = to_string(m);
+                if (m < 10) s = "0" + s;
+                return s;
+            };
+            
+            file << timeSlot.id << ". "
+                 << timeSlot.startTime << "h" << formatMinute(timeSlot.startMin) << "p"
+                 << " - "
+                 << timeSlot.endTime << "h" << formatMinute(timeSlot.endMin) << "p"
+                 << "\n";
+            }
+            file << "\n";
+        }
+        file.close();
+        cout << "Field data saved successfully!" << endl;
+};
+    
 void saveFileOfField() {
     ofstream file("data/field.txt");
     if (!file) {
@@ -355,32 +305,26 @@ void saveFileOfField() {
     for (auto &f : fields) {
         file << "Field." << f.id << ". "
              << f.name << " - " << f.location << " - "
-             << f.size << " - " << f.hourlyRate << "$/h - "
-             << (f.isAvailable ? "IsAvailable" : "Booked") << "\n";
+             << f.size << " - " << f.hourlyRate << "$/h\n";
 
         file << f.timeSlots.size() << " slot:\n";
 
         for (const TimeSlot &timeSlot : f.timeSlots) {
-            // format phút có 2 chữ số nếu < 10
             auto formatMinute = [](int m) {
-                string s = to_string(m);
-                if (m < 10) s = "0" + s;
-                return s;
+                return (m < 10) ? "0" + to_string(m) : to_string(m);
             };
 
             file << timeSlot.id << ". "
                  << timeSlot.startTime << "h" << formatMinute(timeSlot.startMin) << "p"
                  << " - "
-                 << timeSlot.endTime << "h" << formatMinute(timeSlot.endMin) << "p"
-                 << " - "
-                 << (timeSlot.isAvailable ? "IsAvailable" : "Booked")
-                 << "\n";
+                 << timeSlot.endTime << "h" << formatMinute(timeSlot.endMin) << "p\n";
         }
 
-        file << "\n";
+        file << "\n"; // Thêm dòng trống giữa các field
     }
 
     file.close();
+    cout << "Field data saved successfully!\n";
 };
 
 int parseTimeHour(const string& timeStr);
@@ -438,62 +382,223 @@ void loadFileOfField() {
                 size_t dash1 = fieldInfo.find(" - ");
                 size_t dash2 = fieldInfo.find(" - ", dash1 + 3);
                 size_t dash3 = fieldInfo.find(" - ", dash2 + 3);
-                size_t dash4 = fieldInfo.find("$/h - ", dash3 + 3);
 
                 if (dash1 != string::npos && dash2 != string::npos &&
-                    dash3 != string::npos && dash4 != string::npos) {
+                    dash3 != string::npos) {
 
                     field.name = fieldInfo.substr(0, dash1);
                     field.location = fieldInfo.substr(dash1 + 3, dash2 - dash1 - 3);
                     string sizeStr = fieldInfo.substr(dash2 + 3, dash3 - dash2 - 3);
-                    string rateStr = fieldInfo.substr(dash3 + 3, dash4 - dash3 - 3);
-                    string statusStr = fieldInfo.substr(dash4 + 6);
+                    string rateStr = fieldInfo.substr(dash3 + 3);
 
                     field.size = (sizeStr.empty()) ? 0.0f : stof(sizeStr);
                     field.hourlyRate = (rateStr.empty()) ? 0.0f : stof(rateStr);
-                    field.isAvailable = (statusStr == "IsAvailable");
-
-                    // Read time slots
-                    if (getline(file, line)) {
-                        cout << line << endl;
-                        size_t slotPos = line.find(" slot:");
-                        if (slotPos != string::npos) {
-                            int numSlots = stoi(line.substr(0, slotPos));
-                            for (int i = 0; i < numSlots; i++) {
-                                if (getline(file, line)) {
-                                    cout << line << endl;
-
-                                    size_t dotPos = line.find('.');
-                                    if (dotPos != string::npos) {
-                                        TimeSlot timeSlot;
-                                        timeSlot.id = stoi(line.substr(0, dotPos));
-
-                                        string timePart = line.substr(dotPos + 2);
-                                        size_t dashPos = timePart.find(" - ");
-                                        size_t lastDash = timePart.rfind(" - ");
-                                        if (dashPos != string::npos && lastDash != string::npos) {
-                                            string startTimeStr = timePart.substr(0, dashPos);
-                                            string endTimeStr = timePart.substr(dashPos + 3, lastDash - (dashPos + 3));
-                                            string status = timePart.substr(lastDash + 3);
-
-                                            // Parse times
-                                            timeSlot.startTime = parseTimeHour(startTimeStr);
-                                            timeSlot.startMin = parseTimeMinute(startTimeStr);
-                                            timeSlot.endTime = parseTimeHour(endTimeStr);
-                                            timeSlot.endMin = parseTimeMinute(endTimeStr);
-                                            timeSlot.isAvailable = (status == "IsAvailable");
-                                        }
-                                        field.timeSlots.push_back(timeSlot);
-                                    }
-                                }
-                            }
-                        }
-                    }
                     fields.push_back(field);
-                    cout << " Loaded field: " << field.name << " (ID: " << field.id << ")" << endl;
                 }
             }
         }
     }
     file.close();
 };
+
+Field loadFieldFromFileById(string fieldId){
+    ifstream file("data/field.txt");
+    Field f;
+    if (!file.is_open()) 
+    return f;
+    
+    string line;
+    while (getline(file, line)){
+        if (line.empty())
+        continue;
+        Field temp = parseFieldLine(file, line);
+        if (temp.id == fieldId){
+            f = temp;
+            break;
+        }
+    }
+    file.close();
+    return f;
+}
+
+Field parseFieldHeader(const string &line) {
+    Field field;
+    if (line.find("Field.") != 0) return field;
+
+    size_t pos1 = line.find('.');
+    size_t pos2 = line.find('.', pos1 + 1);
+    if (pos1 == string::npos || pos2 == string::npos) return field;
+
+    field.id = line.substr(pos1 + 1, pos2 - pos1 - 1);
+    string fieldInfo = line.substr(pos2 + 1);
+
+    size_t dash1 = fieldInfo.find(" - ");
+    size_t dash2 = fieldInfo.find(" - ", dash1 + 3);
+    size_t dash3 = fieldInfo.find(" - ", dash2 + 3);
+
+    if (dash1 == string::npos || dash2 == string::npos ||
+        dash3 == string::npos) return field;
+
+    field.name = fieldInfo.substr(0, dash1);
+    field.location = fieldInfo.substr(dash1 + 3, dash2 - dash1 - 3);
+    field.size = stof(fieldInfo.substr(dash2 + 3, dash3 - dash2 - 3));
+
+    string rateStr = fieldInfo.substr(dash3 + 3);
+    size_t dollarPos = rateStr.find('$');
+    if (dollarPos != string::npos) {
+        rateStr = rateStr.substr(0, dollarPos);
+    }
+    field.hourlyRate = stof(rateStr);
+    
+    return field;
+}
+
+void parseTimeSlots(ifstream &file, Field &field) {
+    string slotLine;
+    if (!getline(file, slotLine)) return;
+
+    size_t slotPos = slotLine.find(" slot:");
+    if (slotPos == string::npos) return;
+
+    int slotCount = stoi(slotLine.substr(0, slotPos));
+
+    for (int i = 0; i < slotCount; i++) {
+        if (!getline(file, slotLine) || slotLine.empty()) continue;
+
+        size_t dotPos = slotLine.find('.');
+        size_t dashPos = slotLine.find(" - ");
+        if (dotPos == string::npos || dashPos == string::npos) continue;
+
+        TimeSlot slot;
+        slot.id = stoi(slotLine.substr(0, dotPos));
+
+        // Parse start time
+        string timeInfo = slotLine.substr(dotPos + 1, dashPos - dotPos - 1);
+        size_t hPos = timeInfo.find('h');
+        size_t pPos = timeInfo.find('p', hPos);
+        slot.startTime = stoi(timeInfo.substr(0, hPos));
+        slot.startMin = stoi(timeInfo.substr(hPos + 1, pPos - hPos - 1));
+
+        // Parse end time
+        timeInfo = slotLine.substr(dashPos + 3);
+        hPos = timeInfo.find('h');
+        pPos = timeInfo.find('p', hPos);
+        slot.endTime = stoi(timeInfo.substr(0, hPos));
+        slot.endMin = stoi(timeInfo.substr(hPos + 1, pPos - hPos - 1));
+
+        field.timeSlots.push_back(slot);
+    }
+}
+
+Field parseFieldLine(ifstream &file, const string &line) {
+    Field field = parseFieldHeader(line);
+    if (!field.id.empty()) {
+        parseTimeSlots(file, field);
+    }
+    return field;
+}
+
+time_t parseTime(const string &timeStr) {
+    tm t = {};
+    istringstream ss(timeStr);
+    ss >> get_time(&t, "%H:%M");
+    if (ss.fail()) return 0;
+    return mktime(&t);
+};
+
+vector<Field> loadFieldFromFileInVectorType() {
+    vector<Field> fields;
+    ifstream file("data/field.txt");
+    if (!file) {
+        cout << "Cannot open file " << endl;
+        return fields;
+    }
+
+    string line;
+    Field currentField;
+    bool readingSlots = false;
+    int expectedSlots = 0;
+    int slotsRead = 0;
+    
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        // Nếu bắt đầu một field mới
+        if (line.find("Field.") == 0) {
+            // Lưu field trước đó nếu có
+            if (!currentField.id.empty()) {
+                fields.push_back(currentField);
+            }
+            
+            // Parse field mới
+            currentField = Field();
+            currentField.timeSlots.clear();
+            
+            // Field.1. FieldA - Location - 11 - 20$/h - IsAvailable
+            size_t firstDot = line.find('.');
+            size_t secondDot = line.find('.', firstDot + 1);
+            
+            if (firstDot != string::npos && secondDot != string::npos) {
+                currentField.id = line.substr(firstDot + 1, secondDot - firstDot - 1);
+                
+                string rest = line.substr(secondDot + 2); // +2 để bỏ khoảng trắng
+                
+                // Parse name, location, size, rate
+                size_t dash1 = rest.find(" - ");
+                size_t dash2 = rest.find(" - ", dash1 + 3);
+                size_t dash3 = rest.find(" - ", dash2 + 3);
+                
+                if (dash1 != string::npos && dash2 != string::npos && 
+                    dash3 != string::npos) {
+                    
+                    currentField.name = rest.substr(0, dash1);
+                    currentField.location = rest.substr(dash1 + 3, dash2 - dash1 - 3);
+                    currentField.size = stof(rest.substr(dash2 + 3, dash3 - dash2 - 3));
+                    
+                    string rateStr = rest.substr(dash3 + 3);
+                    size_t dollarPos = rateStr.find('$');
+                    if (dollarPos != string::npos) {
+                        rateStr = rateStr.substr(0, dollarPos);
+                    }
+                    currentField.hourlyRate = stof(rateStr);
+                }
+            }
+            readingSlots = false;
+            expectedSlots = 0;
+            slotsRead = 0;
+        }
+        // Nếu là dòng số lượng slot
+        else if (line.find(" slot:") != string::npos) {
+            string slotCountStr = line.substr(0, line.find(" slot:"));
+            expectedSlots = stoi(slotCountStr);
+            readingSlots = true;
+            slotsRead = 0;
+        }
+        // Nếu đang đọc slots
+        else if (readingSlots && slotsRead < expectedSlots) {
+            // Parse slot: "1. 8h00p - 9h00p "
+            stringstream ss(line);
+            int slotId;
+            char dot, h1, p1, dash, h2, p2;
+            int startH, startM, endH, endM;
+            string status;
+            
+            ss >> slotId >> dot;
+            ss >> startH >> h1 >> startM >> p1;
+            ss.ignore(3); // bỏ " - "
+            ss >> endH >> h2 >> endM >> p2;
+            
+            
+            currentField.timeSlots.push_back(TimeSlot(slotId, startH, endH, startM, endM));
+            slotsRead++;
+        }
+    }
+    
+    // Thêm field cuối cùng
+    if (!currentField.id.empty()) {
+        fields.push_back(currentField);
+    }
+    
+    file.close();
+    return fields;
+}
