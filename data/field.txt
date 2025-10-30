@@ -1,11 +1,5 @@
-Field.1. FPT - FPT UNI - 11 - 20$/h
+Field.1. FPT - FPT UNI - 11 - 10$/h
 2 slot:
-1. 10h00p - 12h00p
-2. 13h00p - 15h00p
-
-Field.2. TFT - TFT UNI - 11 - 25$/h
-3 slot:
 1. 10h00p - 11h00p
 2. 12h00p - 13h00p
-3. 14h00p - 15h00p
 

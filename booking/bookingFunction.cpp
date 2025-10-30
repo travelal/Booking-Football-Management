@@ -129,6 +129,19 @@ void addBooking(){
         
         if (option == 1) {
             // Gọi lại hàm để chọn slot mới
+            showAvailableSlots(b.fieldId, b.date);
+            cout << "Enter new TimeSlot ID: ";
+            cin >> b.idTimeSlot;
+            
+            bool newSlotAvailable = isTimeSlotAvailable(b.fieldId, b.idTimeSlot, b.date);
+            if (!newSlotAvailable) {
+                cout << "❌ New time slot is also booked! Please try again.\n";
+                return;
+            }
+        } else if (option == 2) {
+            cout << "Enter new date (dd-mm-yyyy): ";
+            cin >> b.date;
+            // GỌI LẠI TOÀN BỘ PROCESS VỚI NGÀY MỚI
             addBooking();
             return;
         } else {
@@ -318,7 +331,7 @@ void loadBookingToFile() {
     }
     file.close();
 
-    cout << "\n=== All BOOKINGS ===" << endl;
+    cout << "\n======================== All BOOKINGS ========================\n";
     if (bookings.empty()){
         cout << "No Booking found!";
     }else{
