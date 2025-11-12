@@ -146,7 +146,7 @@ void editTimeSlots(){
                     cout << "Enter new end time (hour min): ";
                     cin >> timeSlot.endTime >> timeSlot.endMin;
                     saveFileOfField();
-                    cout << " ===Change Time Slot Success !!!=== ";
+                    cout << " ===Change Time Slot Success !!!=== \n";
                 }
             }
         }
@@ -191,6 +191,7 @@ void deleteField(){
     for (auto &f : fields) {
         if (f.id == id) {
             int choice;
+            cout << "Choice: ";
                 do{
                     cout << "=== DELETE FIELD === \n";
                     cout << "1. Delete Field \n";
@@ -208,7 +209,6 @@ void deleteField(){
                             break;
                     }
                 }while (choice != 0 );                
-                cout << "Choice: ";
             }
         }
 };
